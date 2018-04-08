@@ -19,3 +19,6 @@ npm start
 ```sh
 npm test
 ```
+
+// local home postgres : role: nguyenviethoa pass =tweeter
+
