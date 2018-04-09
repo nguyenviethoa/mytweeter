@@ -10,7 +10,6 @@ type User {
     first_name: String
     last_name: String
     full_name: String
-    name: String @deprecated
     avatar_url: String
 }
 `;

@@ -20,3 +20,12 @@ export const getUsersById = datastore => ids =>
 export const dataloaders = datastore => ({
     userById: new DataLoader(getUsersById(datastore)),
 });
+
+// export const getUsersById = context. => ids =>
+//     Promise.resolve(
+//         ids.map(id => datastore.users.find(user => user.id == id)),
+//         datastore.users.filter(user => ids.includes(user.id)),
+//     );
+// export const dataloaders = datastore => ({
+//     userById: new DataLoader(getUsersById(datastore)),
+// });

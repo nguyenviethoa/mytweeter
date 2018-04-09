@@ -46,16 +46,35 @@ export const Tweet = {
     //     context.dataloaders.userById.load(tweet.author_id),
     // Stats: (tweet, _, context) =>
     //     context.dataloaders.statForTweet.load(tweet.id),
-    Author: (tweet, _, context) => context.pgClient
-        .query('SELECT * from users WHERE id = $1', [tweet.author_id])
-        .then(res => res.rows),
-    Stats: (tweet, _, context) => {
-        console.log('tweetid', tweet);
-        return 
-        context.db
+    Author: async (tweet, _, context) => {
+        // const result = await context.pgClient
+        // .query('SELECT * from users WHERE id = $1', [tweet.author_id])
+        // .then(res => res.rows[0]);
+        // console.log('result', result);
+        // return result;
+        const test2 = await context.dataloaders.userById.load(1);
+        console.log('loader', test2 );
+        const result = await context.dataloaders.userById.load(tweet.author_id);
+        console.log('test dataloaders', result);
+
+        const test3 = {
+            id: 1,
+            first_name: 'nguyen',
+            last_name: 'viethoa',
+            full_name: 'nguyenviethoa',
+            avatar_url: 'google.com',
+            username: 'nguyenviethoa' }
+
+        return result;
+    },
+    Stats: async (tweet, _, context) => {
+        const result = await context.db
         .collection('stats')
         .find({ 'tweet_id': tweet.id })
+        .project({ _id: 0, views: 1, likes: 1, retweets: 1, responses: 1, tweet_id: 1 })
         // .query('SELECT * from stats WHERE tweet_id = $1', [tweet.id])
-        .toArray()
+        .toArray();
+        console.log('tweetid', result[0]);
+        return result[0];
     }
 };

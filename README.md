@@ -18,3 +18,22 @@ npm test
 
 // local home postgres : role: nguyenviethoa pass =tweeter
 
+CREATE TABLE users(
+   ID INT PRIMARY KEY     NOT NULL,
+   usernam           TEXT    NOT NULL,
+   first_name            TEXT,
+   last_name        TEXT,
+   full_name TEXT,
+   avatar_url TEXT
+);
+
+CREATE TABLE tweets(
+   ID INT PRIMARY KEY      NOT NULL,
+   body           text NOT NULL,
+   date DATE,
+   author_id         INT      references users(ID)
+);
+
+insert into users (id, username, first_name, last_name, full_name, avatar_url) values(1, 'nguyenviethoa', 'nguyen', 'viethoa', 'nguyenviethoa', 'google.com')
+
+insert into tweets (id, body, date, author_id) values (1, 'this is the first tweet', '2018-02-02', 1);
