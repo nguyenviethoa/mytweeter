@@ -1,3 +1,5 @@
+const uuidv1 = require('uuid/v1');
+
 export const Query = {
     // Tweets: (_, { limit = 5, skip = 0 }, context) =>
     //     Promise.resolve(
@@ -16,11 +18,14 @@ export const Query = {
         .then(res => res.rows),
 };
 export const Mutation = {
-    createTweet: (_, { body }, context) => {
-        const nextTweetId =
-            context.datastore.tweets.reduce((id, tweet) => {
-                return Math.max(id, tweet.id);
-            }, -1) + 1;
+    createTweet: async (_, { body }, context) => {
+        // const nextTweetId =
+        //     context.datastore.tweets.reduce((id, tweet) => {
+        //         return Math.max(id, tweet.id);
+        //     }, -1) + 1;
+
+        const nextTweetId = uuidv1();
+        console.log('generated id', nextTweetId);
         const newTweetStats = {
             tweet_id: nextTweetId,
             views: 0,
@@ -33,48 +38,24 @@ export const Mutation = {
             date: new Date(),
             author_id: context.author_id,
             body,
-            Stats: newTweetStats,
         };
 
-        context.datastore.tweets.push(newTweet);
-        context.datastore.stats.push(newTweetStats);
-        return Promise.resolve(newTweet);
+        const result = await context.pgClient.query('insert into tweets (id, body, date, author_id) values ($1, $2, $3, $4)',
+        [newTweet.id, newTweet.body, newTweet.date, newTweet.author_id]);
+
+        await context.db.collection('stats').insert(newTweetStats);
+        // context.datastore.tweets.push(newTweet);
+        // context.datastore.stats.push(newTweetStats);
+        return newTweet;
     },
 };
 export const Tweet = {
-    // Author: (tweet, _, context) =>
-    //     context.dataloaders.userById.load(tweet.author_id),
-    // Stats: (tweet, _, context) =>
-    //     context.dataloaders.statForTweet.load(tweet.id),
     Author: async (tweet, _, context) => {
-        // const result = await context.pgClient
-        // .query('SELECT * from users WHERE id = $1', [tweet.author_id])
-        // .then(res => res.rows[0]);
-        // console.log('result', result);
-        // return result;
-        const test2 = await context.dataloaders.userById.load(1);
-        console.log('loader', test2 );
         const result = await context.dataloaders.userById.load(tweet.author_id);
-        console.log('test dataloaders', result);
-
-        const test3 = {
-            id: 1,
-            first_name: 'nguyen',
-            last_name: 'viethoa',
-            full_name: 'nguyenviethoa',
-            avatar_url: 'google.com',
-            username: 'nguyenviethoa' }
-
         return result;
     },
     Stats: async (tweet, _, context) => {
-        const result = await context.db
-        .collection('stats')
-        .find({ 'tweet_id': tweet.id })
-        .project({ _id: 0, views: 1, likes: 1, retweets: 1, responses: 1, tweet_id: 1 })
-        // .query('SELECT * from stats WHERE tweet_id = $1', [tweet.id])
-        .toArray();
-        console.log('tweetid', result[0]);
-        return result[0];
+        const result = await context.dataloaders.statForTweet.load(tweet.id);
+        return result;
     }
 };

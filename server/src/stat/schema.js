@@ -1,5 +1,6 @@
 const Stat = `
 type Stat {
+    _id: String
     views: Int
     likes: Int
     retweets: Int
