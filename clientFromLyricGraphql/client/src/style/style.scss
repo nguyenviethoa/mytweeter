@@ -1,0 +1,17 @@
+@import './base/settings';
+@import './components/header';
+
+.collection-item {
+	display: flex;
+	justify-content: space-between;
+}
+
+.material-icons {
+	cursor: pointer;
+	margin-right: 5
+}
+
+.vote-box {
+	display: flex;
+	align-items: "center"
+}

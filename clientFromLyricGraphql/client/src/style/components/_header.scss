@@ -1,0 +1,11 @@
+.header {
+  background: $off-black;
+  margin-bottom: 10;
+  padding-left: 10;
+}
+
+@media(min-width: 400) {
+  .header {
+    margin-bottom: 0;
+  }
+}

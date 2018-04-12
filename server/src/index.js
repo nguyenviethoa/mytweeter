@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import graphqlHTTP from 'express-graphql';
 import DataLoader from 'dataloader';
+import bodyParser from 'body-parser';
 
 const MongoClient = require('mongodb').MongoClient;
 const { Client } = require('pg');
@@ -13,7 +14,8 @@ import { dataloaders as userDataloaders } from './user/resolvers';
 import { dataloaders as statDataloaders } from './stat/resolvers';
 
 const start = async () => {
-    const pgClient = new Client('postgres://postgres:postgres@localhost:5432/mytweeter');
+    // const pgClient = new Client('postgres://postgres:postgres@45.32.125.3:5432/mytweeter');
+    const pgClient = new Client('postgres://rxtahmzp:YS9v35I60ZW8GH0QCSLkeKdv9tGwrC69@stampy.db.elephantsql.com:5432/rxtahmzp');
     await pgClient.connect();
     const testpg = await pgClient.query('SELECT * from users WHERE id = $1', ['abcxyz']).then(res => res.rows);
     console.log('testpg', testpg)
@@ -25,18 +27,18 @@ const start = async () => {
 
     var app = express();
 
-    // app.use(cors());
+    app.use(cors());
 
-    // app.use(function (req, res, next) {
-    //     res.header("Access-Control-Allow-Origin", "*");
-    //     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    //     next();
-    // });
-
+    app.use(function (req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        next();
+    });
+    app.use(bodyParser.json())
     app.use(
         '/graphql',
         graphqlHTTP(request => 
-            {
+            {   
                 const startTime = Date.now();
                 return{
                     schema: schema,
