@@ -18,12 +18,10 @@ const start = async () => {
     const pgClient = new Client('postgres://rxtahmzp:YS9v35I60ZW8GH0QCSLkeKdv9tGwrC69@stampy.db.elephantsql.com:5432/rxtahmzp');
     await pgClient.connect();
     const testpg = await pgClient.query('SELECT * from users WHERE id = $1', ['abcxyz']).then(res => res.rows);
-    console.log('testpg', testpg)
 
     const mongoClient = await MongoClient.connect('mongodb://nguyenviethoa:Taptrung9@ds237989.mlab.com:37989/mytweeter');
     const db = mongoClient.db("mytweeter");
     const test = await mongoClient.db("mytweeter").collection('stats').find({ 'tweet_id':{$in: [1]} }).project({ _id: 0, views: 1, likes: 1, retweets: 1, responses: 1, tweet_id: 1 }).toArray(); 
-    console.log('test', test);
 
     var app = express();
 
@@ -46,14 +44,16 @@ const start = async () => {
                     graphiql: true,
                     extensions: ({
                         document, variables, operationName, result
-                        }) => ({
-                            timing: Date.now() -startTime,
-                        })
+                        }) => 
+                    ({
+                        timing: Date.now() -startTime,
+                    }),
+                    debug: true
             };
         }),
     );
     app.listen(4000);
-    console.log('Running a GraphQL API server at http://localhost:4000/graphql');
+    // console.log('Running a GraphQL API server at http://localhost:4000/graphql');
 
 }
 
