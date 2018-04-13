@@ -60,6 +60,7 @@ class TweetList extends Component {
 				>
 					<i className="material-icons">add</i>
 				</Link>	 */}
+				<i className="material-icons">add</i>
 			</div>	
 		);
 	}

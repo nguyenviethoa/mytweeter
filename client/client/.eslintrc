@@ -1,8 +1,11 @@
+// {
+//     "extends": "rallycoding",
+//     "rules": {
+//       "arrow-body-style": 0,
+//       "camelcase": 0,
+//       "no-underscore-dangle": 0
+//     }
+// }
 {
-    "extends": "rallycoding",
-    "rules": {
-      "arrow-body-style": 0,
-      "camelcase": 0,
-      "no-underscore-dangle": 0
-    }
+  "parser": "babel-eslint"
 }

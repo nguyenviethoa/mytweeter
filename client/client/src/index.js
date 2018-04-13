@@ -1,5 +1,5 @@
 // import 'normalize.css/normalize.css';
-// import './style/style.scss';
+import './style/style.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ApolloClient } from 'apollo-client';

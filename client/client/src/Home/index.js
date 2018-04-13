@@ -15,6 +15,7 @@ export class Home extends Component {
 			<ul className="container">
 				Home Page
 			</ul>	
+			<i className="material-icons">add</i>
 			<Link to='/tweets'> go to tweets list </Link>
 			<Link to='/tweets/new'> create new tweet </Link>
 		</div>
