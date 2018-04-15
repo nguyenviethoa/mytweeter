@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const TweetSchema = require('../tweet/TweetModelSchema');
+const TweetModelSchema = require('../tweet/TweetModelSchema');
 
 const UserSchema = new Schema({
   username: {
@@ -17,13 +17,17 @@ const UserSchema = new Schema({
   last_name: String,
   full_name: String,
   avatar_url: String,
-  tweets: [TweetSchema]
+  tweetsSchema: [TweetModelSchema],
+  tweets: [{
+    type: Schema.Types.ObjectId,
+    ref: 'tweet'
+  }]
 });
 
 UserSchema.virtual('tweetsCount').get(function() {
-  return this.tweets.length;
+  return this.tweetsSchema.length;
 });
 
-const UserModel = mongoose.model('User', UserSchema);
+const UserModel = mongoose.model('user', UserSchema);
 
 module.exports = UserModel;

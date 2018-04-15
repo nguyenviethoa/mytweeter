@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-const TweetSchema = new Schema({
+const TweetModelSchema = new Schema({
   body: String,
   date: Date
 });
 
-module.exports = TweetSchema;
+module.exports = TweetModelSchema;

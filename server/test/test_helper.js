@@ -12,7 +12,12 @@ before((done) => {
 });
 
 beforeEach((done) => {
-  mongoose.connection.collections.users.drop(() => {
-    done();
-  })
+  const { users, stats, tweets } = mongoose.connection.collections;
+  users.drop(() => {
+    tweets.drop(() => {
+      stats.drop(() => {
+        done()
+      });
+    });
+  });
 });
