@@ -7,7 +7,7 @@ const TweetSchema = new Schema({
   date: Date,
   stats: {
     type: Schema.Types.ObjectId,
-    ref: 'stat'
+    ref: 'stats'
   }
 });
 

@@ -13,6 +13,6 @@ const StatSchema = new Schema({
   }
 });
 
-const StatModel = mongoose.model('stat', StatSchema);
+const StatModel = mongoose.model('stats', StatSchema);
 
 module.exports = StatModel;

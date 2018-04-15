@@ -19,11 +19,30 @@ describe('Associations tests', () => {
       .then(() => done());
   });
 
-  it.only('tweet user stat associations', (done) => {
-    UserModel.find({ username: 'Joe'})
+  it('tweet user stat associations', (done) => {
+    UserModel.findOne({ username: 'Joe'})
+    .populate('tweets')
       .then((user) => {
-        console.log('user', user);
+        assert(user.tweets[0].body === 'the first tweet');
       })
+    done();
+  })
+
+  it.only('tweet user stat full associations tree', (done) => {
+    UserModel.findOne({ username: 'Joe'})
+    .populate({
+      path: 'tweets',
+      populate: {
+        path: 'stats',
+        model: 'stats',
+        populate: {
+          path: 'tweet',
+          model: 'tweet'
+        }
+      }
+    }).then((user) => {
+      assert(user.tweets[0].stats.views === 10);
+    });
     done();
   })
 })

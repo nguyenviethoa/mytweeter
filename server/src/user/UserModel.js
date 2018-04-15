@@ -28,6 +28,14 @@ UserSchema.virtual('tweetsCount').get(function() {
   return this.tweetsSchema.length;
 });
 
+UserSchema.pre('remove', function(next) {
+  const TweetModel = mongoose.model('tweet');
+
+  TweetModel.remove({ _id: { $in: { $in: this.tweets }}})
+    .then(() => next());
+
+})
+
 const UserModel = mongoose.model('user', UserSchema);
 
 module.exports = UserModel;
