@@ -8,7 +8,7 @@ describe('Associations tests', () => {
   
   beforeEach((done) => {
     joe = new UserModel({ username: 'Joe', tweets: [] });
-    tweet = new TweetModel({ body: 'the first tweet', date: new Date()});
+    tweet = new TweetModel({ body: 'the first tweet', date: new Date(), author: joe });
     stat = new StatModel({views: 10 });
 
     joe.tweets.push(tweet);

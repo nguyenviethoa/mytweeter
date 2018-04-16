@@ -31,7 +31,7 @@ UserSchema.virtual('tweetsCount').get(function() {
 UserSchema.pre('remove', function(next) {
   const TweetModel = mongoose.model('tweet');
 
-  TweetModel.remove({ _id: { $in: { $in: this.tweets }}})
+  TweetModel.remove({ _id: { $in: this.tweets }})
     .then(() => next());
 
 })
