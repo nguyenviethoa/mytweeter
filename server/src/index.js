@@ -6,9 +6,12 @@ import DataLoader from 'dataloader';
 import bodyParser from 'body-parser';
 import passport from 'passport';
 import GoogleStrategy from 'passport-google-oauth20';
+import expressWinston from 'express-winston';
+import winston from 'winston';
 const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 const { Client } = require('pg');
+
 
 import schema from './schema';
 
@@ -69,16 +72,54 @@ const start = async () => {
         const { collections } = mongoose.connection;
         
         app.use(bodyParser.json())
+
+        // app.use(express.methodOverride());
+
+        // app.use(expressWinston.logger({
+        //     transports: [
+        //         new winston.transports.Console({
+        //             json: true,
+        //             colorize: true
+        //         })
+        //     ]
+        // }));
+
+        // app.use(expressWinston.errorLogger({
+        //     transports: [
+        //         new winston.transports.Console({
+        //             json: true,
+        //             colorize: true
+        //         })
+        //     ]
+        // }));
+
+        function loggingMiddleware(req, res, next) {
+            if (req.url.indexOf('graphql') !== -1) {
+                winston.debug('REQUEST: ', req.body);
+            }
+            next();
+        }
+        app.use(loggingMiddleware);
     
         app.use(
             '/graphql',
             graphqlHTTP(request => 
                 {   
+                    console.log('request come', request);
                     const startTime = Date.now();
                     return{
                         schema: schema,
                         context: { dataloaders: { ...userDataloaders(), ...statDataloaders() }},
                         graphiql: true,
+                        formatError: error => {
+                            const params = {
+                                message: error.message,
+                                locations: error.locations,
+                                stack: error.stack
+                            };
+                            winston.error(`message: "${error.message}", query: "${request.body.query}`);
+                            return (params);        
+                        },
                         extensions: ({
                             document, variables, operationName, result
                             }) => 
@@ -89,8 +130,8 @@ const start = async () => {
                 };
             }),
         );
-        app.listen(27017);
-        console.log('Running a GraphQL API server at http://45.32.125.3:27017/graphql'); 
+        app.listen(4000);
+        console.log('Running a GraphQL API server at http://localhost:4000/graphql'); 
     })
     .on('error', (error) => {
         console.warn('Warning', error);
