@@ -28,7 +28,7 @@ const start = async () => {
 
     mongoose.Promise = global.Promise;
 
-    mongoose.connect('mongodb://opentechiz:opentechiz@45.32.125.3:27017/tweeterOpentechiz');
+    mongoose.connect('mongodb://nguyenviethoa:Taptrung9@ds237989.mlab.com:37989/mytweeter');
     mongoose.connection
     .once('open', () => { 
         console.log('start server');
