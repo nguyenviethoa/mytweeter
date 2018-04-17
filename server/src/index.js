@@ -12,7 +12,7 @@ const { Client } = require('pg');
 
 import schema from './schema';
 
-import keys from '../config/keys';
+// import keys from '../config/keys';
 
 import { dataloaders as userDataloaders } from './user/resolvers';
 import { dataloaders as statDataloaders } from './stat/resolvers';
