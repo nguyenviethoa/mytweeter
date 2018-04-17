@@ -89,8 +89,8 @@ const start = async () => {
                 };
             }),
         );
-        app.listen(4000);
-        console.log('Running a GraphQL API server at http://45.32.125.3:4000/graphql'); 
+        app.listen(27017);
+        console.log('Running a GraphQL API server at http://45.32.125.3:27017/graphql'); 
     })
     .on('error', (error) => {
         console.warn('Warning', error);
