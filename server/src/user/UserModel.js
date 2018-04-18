@@ -12,7 +12,9 @@ const UserSchema = new Schema({
       message: "username must be longer than 2 characters."
     },
     required: [true, 'username is required']
-  },  
+  },
+  email: String,
+  password: String,  
   first_name: String,
   last_name: String,
   full_name: String,
@@ -21,7 +23,8 @@ const UserSchema = new Schema({
   tweets: [{
     type: Schema.Types.ObjectId,
     ref: 'tweet'
-  }]
+  }],
+  jwt: String
 });
 
 UserSchema.virtual('tweetsCount').get(function() {

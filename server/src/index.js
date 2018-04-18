@@ -8,6 +8,7 @@ import passport from 'passport';
 import GoogleStrategy from 'passport-google-oauth20';
 import expressWinston from 'express-winston';
 import winston from 'winston';
+import log4js from 'log4js';
 const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 const { Client } = require('pg');
@@ -19,6 +20,13 @@ import schema from './schema';
 
 import { dataloaders as userDataloaders } from './user/resolvers';
 import { dataloaders as statDataloaders } from './stat/resolvers';
+
+log4js.configure({
+    appenders: { traces: { type: 'file', filename: 'traces.log' } },
+    categories: { default: { appenders: ['traces'], level: 'debug' } }
+  });
+
+var logger = log4js.getLogger('traces');
 
 const start = async () => {
 
@@ -34,7 +42,7 @@ const start = async () => {
     mongoose.connect('mongodb://nguyenviethoa:Taptrung9@ds237989.mlab.com:37989/mytweeter');
     mongoose.connection
     .once('open', () => { 
-        console.log('start server');
+        logger.info('start server');
         var app = express();
         // google login
         // passport.use(
@@ -105,7 +113,7 @@ const start = async () => {
             '/graphql',
             graphqlHTTP(request => 
                 {   
-                    console.log('request come', request);
+                    logger.debug('request come', request);
                     const startTime = Date.now();
                     return{
                         schema: schema,
@@ -131,10 +139,10 @@ const start = async () => {
             }),
         );
         app.listen(4000);
-        console.log('Running a GraphQL API server at http://localhost:4000/graphql'); 
+        logger.info('Running a GraphQL API server at http://localhost:4000/graphql'); 
     })
     .on('error', (error) => {
-        console.warn('Warning', error);
+        logger.error('Warning', error);
     });
 }
 

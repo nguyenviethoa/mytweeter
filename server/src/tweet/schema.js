@@ -9,7 +9,7 @@ extend type Query {
     TweetsMeta: Meta
 }
 extend type Mutation {
-    createTweet (body: String, userId: String): Tweet
+    createTweet (body: String, username: String): Tweet
     deleteTweet(id: ID!): Tweet
     markTweetRead(id: ID!): Boolean
 }

@@ -7,7 +7,7 @@ describe('Associations tests', () => {
   let joe, tweet, stat;
   
   beforeEach((done) => {
-    joe = new UserModel({ username: 'Joe', tweets: [] });
+    joe = new UserModel({ username: 'Joe', tweets: [], email: 'nguyenviethoa1984@gmail.com' });
     tweet = new TweetModel({ body: 'the first tweet', date: new Date(), author: joe });
     stat = new StatModel({views: 10 });
 

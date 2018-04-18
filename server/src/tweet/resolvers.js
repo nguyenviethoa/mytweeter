@@ -13,10 +13,10 @@ export const Query = {
     },
 };
 export const Mutation = {
-    createTweet: async (_, { body, userId }, context) => {
-        const user = await UserModel.findOne({ _id: userId });
+    createTweet: async (_, { body, username }, context) => {
+        const user = await UserModel.findOne({ username });
         const newTweet = new TweetModel({ body, author: user, date: new Date()});
-        awaitnewTweet.save();
+        newTweet.save();
         return newTweet;
     },
 };
