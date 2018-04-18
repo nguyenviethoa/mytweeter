@@ -9,12 +9,12 @@ extend type Query {
     TweetsMeta: Meta
 }
 extend type Mutation {
-    createTweet (body: String): Tweet
+    createTweet (body: String, username: String): Tweet
     deleteTweet(id: ID!): Tweet
     markTweetRead(id: ID!): Boolean
 }
 type Tweet {
-    id: ID!
+    _id: ID!
     # The tweet text. No more than 140 characters!
     body: String
     # When the tweet was published

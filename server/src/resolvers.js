@@ -3,7 +3,7 @@ import {
     Mutation as TweetMutation,
     Tweet,
 } from './tweet/resolvers';
-import { Query as UserQuery, User } from './user/resolvers';
+import { Query as UserQuery, User, Mutation as UserMutation } from './user/resolvers';
 import Date from './scalar/Date';
 
 export default {
@@ -13,6 +13,7 @@ export default {
     },
     Mutation: {
         ...TweetMutation,
+        ...UserMutation
     },
     Tweet,
     User,
