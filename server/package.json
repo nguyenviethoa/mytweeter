@@ -16,6 +16,7 @@
         "cors": "^2.8.4",
         "dataloader": "^1.4.0",
         "date-fns": "^1.28.5",
+        "dotenv": "^5.0.1",
         "express": "^4.15.3",
         "express-graphql": "^0.6.6",
         "express-jwt": "^5.3.1",

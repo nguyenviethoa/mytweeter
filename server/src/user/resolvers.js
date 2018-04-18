@@ -1,8 +1,10 @@
 import DataLoader from 'dataloader';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import UserModel from './UserModel';
 import TweetModel from '../tweet/TweetModel';
 import { Tweet } from '../tweet/resolvers';
+import JWT_SECRET from '../../config/config';
 
 export const Query = {
     User: async (_, { id }) => {
@@ -35,33 +37,51 @@ export const dataloaders = () => ({
 });
 
 export const Mutation = {
-    loginWithEmail: async (_, { email, password }) => {
+    loginWithEmail: async (_, { email, password }, ctx) => {
         const user = await UserModel.findOne({ email: email });
+
         if (!user) {
             throw new Error('Email not existed');
         }
 
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            throw new Error('Password is incorrect');
-        }
+        const validPassword = await bcrypt.compare(password, user.password)
+        .then((res) => {
+            if (res) {
+              // create jwt
+              const token = jwt.sign({
+                id: user.id,
+                email: user.email,
+              }, JWT_SECRET);
+              user.jwt = token;
+              ctx.user = Promise.resolve(user);
+              return user;
+            }
+
+            return Promise.reject('password incorrect');
+        });
 
         return user;
     },
     signup: async(_, { username, email, password }) => {
-        const usersEmail = await UserModel.find({ email: email });
-        const usernames = await UserModel.find({ username: username });
-        console.log('userEmail', usersEmail);
-        const isNotUndefined = usersEmail && usernames;
-        const isEmptyAccounts = usersEmail.length === 0 || usernames.length === 0;
-        if (isNotUndefined && !isEmptyAccounts) {
-            throw new Error('Email or username already existed');
-        }
-        const hashedPassword = await bcrypt.hash(password, 10);
-        console.log('hashed pass: ', hashedPassword);
-        const newUser = new UserModel({ username, email, password: hashedPassword });
-        const savedUser = newUser.save().then((user) => user);
-        return savedUser; 
+        // find user by email
+        return UserModel.findOne({ email } ).then((existing) => {
+            if (!existing) {
+                // hash password and create user
+                return bcrypt.hash(password, 10).then(hash => new UserModel({
+                    email,
+                    password: hash,
+                    username: username || email,
+                })).then((user) => {
+                    const { _id } = user;
+                    const token = jwt.sign({ _id, email }, JWT_SECRET);
+                    user.jwt = token;
+                    ctx.user = Promise.resolve(user);
+                    return user;
+                });
+            }
+
+            return Promise.reject('email already exists'); // email already exists
+        });
     },
 };
 

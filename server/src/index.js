@@ -8,14 +8,16 @@ import passport from 'passport';
 import GoogleStrategy from 'passport-google-oauth20';
 import expressWinston from 'express-winston';
 import winston from 'winston';
+import jwt from 'express-jwt';
 import log4js from 'log4js';
+
 const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
 const { Client } = require('pg');
 
-
+import JWT_SECRET from '../config/config';
 import schema from './schema';
-
+import UserModel from './user/UserModel';
 // import keys from '../config/keys';
 
 import { dataloaders as userDataloaders } from './user/resolvers';
@@ -108,6 +110,13 @@ const start = async () => {
             next();
         }
         app.use(loggingMiddleware);
+
+        app.use(
+            jwt({
+                secret: JWT_SECRET,
+                credentialsRequired: false,
+            })
+        );
     
         app.use(
             '/graphql',
@@ -117,7 +126,9 @@ const start = async () => {
                     const startTime = Date.now();
                     return{
                         schema: schema,
-                        context: { dataloaders: { ...userDataloaders(), ...statDataloaders() }},
+                        context: { 
+                            dataloaders: { ...userDataloaders(), ...statDataloaders() }, 
+                            currentUser: request.user ? UserModel.findOne({ where: { _id: request.user.id } }) : Promise.resolve(null)},
                         graphiql: true,
                         formatError: error => {
                             const params = {
@@ -139,7 +150,7 @@ const start = async () => {
             }),
         );
         app.listen(4000);
-        logger.info('Running a GraphQL API server at http://localhost:4000/graphql'); 
+        console.log('Running a GraphQL API server at http://localhost:4000/graphql'); 
     })
     .on('error', (error) => {
         logger.error('Warning', error);
