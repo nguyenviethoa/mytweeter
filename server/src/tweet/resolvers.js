@@ -22,6 +22,7 @@ export const Mutation = {
 };
 export const Tweet = {
     Author: async (tweet, _, context) => {
+        console.log('tweet', tweet);
         const result = await context.dataloaders.userById.load(tweet.author);
         return result;
     },

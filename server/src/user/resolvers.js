@@ -14,19 +14,21 @@ export const Query = {
         return user;
     },
     UserByEmail: async (_, { email }) => {
-        const user = await UserModel.findOne({ email })
+        const user = await UserModel.findOne({ email: email })
         .populate('tweets');
 
         return user;
     },
 };
+
 export const User = {
     full_name: (author) => `${author.first_name} ${author.last_name}`
 };
 
 async function batchUsers (ids) {
-    const users = await UserModel.find({ _id: { $in: ids }});
-    return users;
+    const promisses = await UserModel.find({ _id: { $in: ids }});
+    console.log('promisses', promisses)
+    return Promise.all(promisses);
 }
 
 export const dataloaders = () => ({
@@ -62,7 +64,7 @@ export const Mutation = {
 
         return user;
     },
-    signup: async(_, { username, email, password }) => {
+    signup: async(_, { username, email, password }, ctx) => {
         // find user by email
         return UserModel.findOne({ email } ).then((existing) => {
             if (!existing) {
