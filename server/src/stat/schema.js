@@ -1,11 +1,10 @@
 const Stat = `
 type Stat {
-    _id: String
+    _id: ID!
     views: Int
     likes: Int
     retweets: Int
     responses: Int
-    tweet_id: Int
 }
 `;
 

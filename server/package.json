@@ -4,32 +4,42 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "./node_modules/.bin/jest --watch",
+        "test": "nodemon --exec 'mocha -R min'",
+        "normal-test": "mocha",
         "start": "./node_modules/.bin/babel-node src/index.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "bcrypt": "^2.0.0",
         "body-parser": "^1.18.2",
         "cors": "^2.8.4",
         "dataloader": "^1.4.0",
         "date-fns": "^1.28.5",
+        "dotenv": "^5.0.1",
         "express": "^4.15.3",
         "express-graphql": "^0.6.6",
+        "express-jwt": "^5.3.1",
+        "express-winston": "^2.5.1",
         "graphql": "^0.10.5",
         "graphql-tools": "^1.1.0",
+        "jsonwebtoken": "^8.2.1",
+        "log4js": "^2.5.3",
         "mongodb": "^3.0.5",
+        "mongoose": "^5.0.15",
         "nodemon": "^1.11.0",
         "passport": "^0.4.0",
         "passport-google-oauth20": "^1.0.0",
         "pg": "^7.4.1",
-        "uuid": "^3.2.1"
+        "uuid": "^3.2.1",
+        "winston": "^2.4.1"
     },
     "devDependencies": {
         "babel-cli": "^6.24.1",
         "babel-plugin-add-module-exports": "^0.2.1",
         "babel-preset-env": "^1.6.0",
         "babel-preset-stage-3": "^6.24.1",
-        "jest": "^20.0.4"
+        "jest": "^20.0.4",
+        "mocha": "^5.1.0"
     }
 }
